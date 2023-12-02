@@ -2,29 +2,23 @@ import Foundation
 
 // 12 red cubes, 13 green cubes, and 14 blue cubes
 let input = try String(contentsOfFile: "fileinput")
-let sum = input.split(separator: "\n").reduce(0) { acc, game in
+let sum: Int = input.split(separator: "\n").reduce(0) { acc, game in
     let splitted = game.split(separator: ":")
-    let gameId = splitted.first!.split(separator: " ").last!
     let allDraws = splitted.last!
-    var isGameValid = true
-    allDraws.split(separator: ";").forEach { draws in
-        let curBucket = parseDrawAttempt(String(draws))
-        if !isValidGame(curBucket) {
-            isGameValid = false
+    
+    let baseDraw = allDraws.split(separator: ";")
+        .map{d in parseDrawAttempt(String(d))}
+        .reduce(into: [String:Int]()) { base, cur in
+        ["red", "green", "blue"].forEach { color in
+            base[color] = max(base[color] ?? 1, cur[color] ?? 1)
         }
     }
 
-    return isGameValid ? acc + Int(gameId)! : acc
+     let minimumPower = (baseDraw["red"]! * baseDraw["green"]! * baseDraw["blue"]!)
+     return acc + minimumPower
 }
 
 print("Result is: ", sum)
-
-func isValidGame(_ gameDict: [String: Int]) -> Bool {
-    let redCubes = gameDict["red"] ?? 0
-    let greenCubes = gameDict["green"] ?? 0
-    let blueCubes = gameDict["blue"] ?? 0
-    return redCubes <= 12 && greenCubes <= 13 && blueCubes <= 14
-}
 
 func parseDrawAttempt(_ drawAttempt: String) -> [String: Int] {
     var bucket = [String:Int]()
