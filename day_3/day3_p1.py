@@ -1,10 +1,9 @@
+import re
 input = open("input").read().splitlines()
 
 def containsSymbol(str):
-    for s in str:
-        if not (s == '.' or s.isdigit()):
-            return True
-    return False
+    return re.match(r"\d|.")
+
 
 num = ""
 sum = 0
