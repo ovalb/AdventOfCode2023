@@ -60,9 +60,7 @@ for r in rows:
     hands.append(Hand(cards=rr[0], bid=int(rr[1])))
 
 hands = sorted(hands, key=functools.cmp_to_key(compare_strength))
+res = sum([(i + 1) * h.bid for i, h in enumerate(hands)])
 
-res = 0
-for i, h in enumerate(hands):
-    res += (i + 1) * h.bid
 
 print(res)

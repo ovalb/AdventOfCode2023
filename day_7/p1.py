@@ -56,8 +56,5 @@ for r in rows:
 
 hands = sorted(hands, key=functools.cmp_to_key(compare_strength))
 
-res = 0
-for i, h in enumerate(hands):
-    res += (i + 1) * h.bid
-
+res = sum([(i + 1) * h.bid for i, h in enumerate(hands)])
 print(res)
