@@ -1,6 +1,6 @@
 import os
 from collections import namedtuple
-from enum import Enum
+from itertools import pairwise
 
 directory = os.path.dirname(os.path.abspath(__file__))
 filepath = os.path.join(directory, "input")
@@ -64,37 +64,28 @@ def p1():
     S = findS()
     all_neighbors = [Elem(jump(S, dir), dir) for dir in ["N", "W", "E", "S"]]
     valid_neighbors = [n for n in all_neighbors if valid_elem(n)]
-    arr1 = [valid_neighbors[0]]
-    arr2 = [valid_neighbors[1]]
+    wall = set()
+    cur = valid_neighbors[0]
+    wall.add(cur.p)
+    while cur.p != S:
+        cur = go_forward(cur)
+        wall.add(cur.p)
 
-    while True:
-        n1, n2 = (arr1[-1], arr2[-1])
-        posset1 = set([a[0] for a in arr1])
-        posset2 = set([a[0] for a in arr2])
+    # for w in wall:
+    #     print(w)
 
-        if len(posset1 & posset2) != 0:
-            return min(len(arr1), len(arr2))
-
-        next1 = go_forward(n1)
-        next2 = go_forward(n2)
-        arr1.append(next1)
-        arr2.append(next2)
-
-
-# sol = p1()
-# print("sol is:", sol)
-
-
-def reverses_number(i, y, wall):
-    rev = 0
-    for x in range(y + 1, len(grid[i])):
-        if Pos(i, x) in wall and grid[i][x] in {"|", "L", "J"}:
-            rev += 1
-    return rev
+    return len(list(wall)) // 2
 
 
 # using raytracing
-def p2():
+def p2(grid):
+    def reverses_number(i, y, wall):
+        rev = 0
+        for x in range(y + 1, len(grid[i])):
+            if Pos(i, x) in wall and grid[i][x] in {"|", "L", "J"}:
+                rev += 1
+        return rev
+
     S = findS()
     all_neighbors = [Elem(jump(S, dir), dir) for dir in ["N", "W", "E", "S"]]
     valid_neighbors = [n for n in all_neighbors if valid_elem(n)]
@@ -109,7 +100,6 @@ def p2():
     neighdir = (valid_neighbors[0].d, valid_neighbors[1].d)
     nd = neighdir if neighdir in outdirs.values() else (neighdir[1], neighdir[0])
     s_char = list(outdirs.keys())[list(outdirs.values()).index(nd)]
-    print(f"s_char is {s_char}")
 
     # replace S with real pipe
     for i, row in enumerate(grid):
@@ -119,14 +109,49 @@ def p2():
     for i, row in enumerate(grid):
         for y, _ in enumerate(row):
             if Pos(i, y) not in wall and reverses_number(i, y, wall) % 2 == 1:
-                print(f"({i},{y})")
                 result += 1
 
     return result
 
 
-sol2 = p2()
-print(f"sol2 is {sol2}")
+def shoelaceArea(points):
+    pairs = list(pairwise(points))
+    pairs.append((pairs[-1][1], pairs[0][0]))
+    p0 = 0
+    p1 = 0
+    for p in pairs:
+        p0 += p[1].x * p[0].y
+        p1 += p[1].y * p[0].x
+
+    return abs(p0 - p1) / 2
+
 
 # https://en.wikipedia.org/wiki/Pick%27s_theorem
 # https://en.wikipedia.org/wiki/Shoelace_formula
+# https://11011110.github.io/blog/2021/04/17/picks-shoelaces.html
+# A = 1/2 * sum of (x'-x)(y'+y)
+def p2_shoelace():
+    S = findS()
+    all_neighbors = [Elem(jump(S, dir), dir) for dir in ["N", "W", "E", "S"]]
+    valid_neighbors = [n for n in all_neighbors if valid_elem(n)]
+    wall = list()
+    # print("len of valid ns should be 2: ", len(valid_neighbors))
+    cur = valid_neighbors[0]
+    first = cur
+    while cur.p != S:
+        cur = go_forward(cur)
+        wall.append(cur.p)
+    wall.append(first.p)
+
+    A = shoelaceArea(wall)
+    return A - len(wall) // 2 + 1
+
+
+sol1 = p1()
+print(f"sol1 is {sol1}")
+
+sol2 = p2(grid.copy())
+print(f"sol2 is {sol2}")
+
+sol2_alt = p2_shoelace()
+print(f"sol2 shoelace is {sol2_alt}")
