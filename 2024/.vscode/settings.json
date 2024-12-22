@@ -1,0 +1,27 @@
+{
+  "workbench.colorCustomizations": {
+    "[One Dark Darker]": {
+      "sideBar.background": "#121519",
+      "editor.background": "#171b20"
+    }
+  },
+  "editor.tokenColorCustomizations": {
+    "[One Dark Darker]": {
+      "variables": "#bbb",
+      "functions": "#bbb",
+      "numbers": "#bbb",
+      //   "strings": "#bb7660",
+      "keywords": "#b26cc7",
+      "types": "#57b6c2",
+      //   "types": "#FF0000",
+      "textMateRules": [
+        {
+          "scope": "ref.matchtext",
+          "settings": {
+            "foreground": "#fff"
+          }
+        }
+      ]
+    }
+  }
+}
