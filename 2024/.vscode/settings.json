@@ -8,7 +8,7 @@
   "editor.tokenColorCustomizations": {
     "[One Dark Darker]": {
       "variables": "#bbb",
-      "functions": "#bbb",
+      "functions": "#cecece",
       "numbers": "#bbb",
       //   "strings": "#bb7660",
       "keywords": "#b26cc7",
@@ -22,6 +22,9 @@
           }
         }
       ]
+    },
+    "[Noir Poimandres Dark]": {
+      "keywords": "#b26cc7"
     }
   }
 }
