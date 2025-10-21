@@ -1,0 +1,13 @@
+# Compiled files
+/target/
+
+# Backup and temp files
+*.rs.bk
+*.swp
+
+# Build outputs
+**/*.rlib
+**/*.rmeta
+
+# Cargo specific
+Cargo.lock
