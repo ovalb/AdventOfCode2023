@@ -11,3 +11,6 @@
 
 # Cargo specific
 Cargo.lock
+
+**/input
+**/sample
